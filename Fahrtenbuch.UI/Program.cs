@@ -1,4 +1,6 @@
 using Fahrtenbuch.Data;
+using Fahrtenbuch.Data.Contracts;
+using Fahrtenbuch.Data.Providers;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using MudBlazor.Services;
@@ -8,11 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-
 builder.Services.AddMudServices(
     conf => conf.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight);
 
-//builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddTransient<IDrivesProviders, DrivesProviders>();
 
 builder.Services.AddDbContextFactory<DataBaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=LogbookDb; Integrated Security=True;")));
