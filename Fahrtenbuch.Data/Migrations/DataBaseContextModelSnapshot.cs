@@ -35,9 +35,6 @@ namespace Fahrtenbuch.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("CompanyCarId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Registration")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -49,8 +46,6 @@ namespace Fahrtenbuch.Data.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyCarId");
 
                     b.ToTable("CompanyCars");
                 });
@@ -135,17 +130,10 @@ namespace Fahrtenbuch.Data.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("Fahrtenbuch.Data.Entities.CompanyCar", b =>
-                {
-                    b.HasOne("Fahrtenbuch.Data.Entities.CompanyCar", null)
-                        .WithMany("CompanyCars")
-                        .HasForeignKey("CompanyCarId");
-                });
-
             modelBuilder.Entity("Fahrtenbuch.Data.Entities.Drive", b =>
                 {
                     b.HasOne("Fahrtenbuch.Data.Entities.CompanyCar", "CompanyCar")
-                        .WithMany()
+                        .WithMany("Drives")
                         .HasForeignKey("CompanyCarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -163,7 +151,7 @@ namespace Fahrtenbuch.Data.Migrations
 
             modelBuilder.Entity("Fahrtenbuch.Data.Entities.CompanyCar", b =>
                 {
-                    b.Navigation("CompanyCars");
+                    b.Navigation("Drives");
                 });
 
             modelBuilder.Entity("Fahrtenbuch.Data.Entities.Employee", b =>

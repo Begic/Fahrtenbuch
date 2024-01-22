@@ -10,5 +10,5 @@ public class CompanyCar
     [MaxLength(200)] public string Type { get; set; }
     [MaxLength(200)] public string Registration { get; set; }
 
-    public List<CompanyCar> CompanyCars { get; set; } = new();
+    public List<Drive> Drives { get; set; } = new();
 }

@@ -19,17 +19,11 @@ namespace Fahrtenbuch.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Brand = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Type = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Registration = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    CompanyCarId = table.Column<int>(type: "int", nullable: true)
+                    Registration = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CompanyCars", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CompanyCars_CompanyCars_CompanyCarId",
-                        column: x => x.CompanyCarId,
-                        principalTable: "CompanyCars",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -80,11 +74,6 @@ namespace Fahrtenbuch.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CompanyCars_CompanyCarId",
-                table: "CompanyCars",
-                column: "CompanyCarId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Drives_CompanyCarId",

@@ -34,16 +34,18 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
             FirstName = "Max",
             LastName = "Mustermann",
             Email = "max@mail.muster",
-            
+            Passwort = new byte[0]
         });
     }
 
     if (!db.CompanyCars.Any())
     {
-    }
-
-    if (!db.Drives.Any())
-    {
+        await db.CompanyCars.AddAsync(new CompanyCar
+        {
+            Brand = "Bmw",
+            Type = "M5 CS",
+            Registration = "KU 777 YB"
+        });
     }
 
     await db.SaveChangesAsync();
