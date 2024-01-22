@@ -1,5 +1,6 @@
 using Fahrtenbuch.Data;
 using Fahrtenbuch.Data.Contracts;
+using Fahrtenbuch.Data.Entities;
 using Fahrtenbuch.Data.Providers;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
@@ -16,7 +17,8 @@ builder.Services.AddMudServices(
 builder.Services.AddTransient<IDrivesProviders, DrivesProviders>();
 
 builder.Services.AddDbContextFactory<DataBaseContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=LogbookDb; Integrated Security=True;")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString(
+        "Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=LogbookDb; Integrated Security=True;")));
 
 var app = builder.Build();
 
@@ -24,20 +26,24 @@ using (var scope = app.Services.CreateScope())
 using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseContext>>()?.CreateDbContext())
 {
     await db.Database.MigrateAsync();
-    
+
     if (!db.Employees.Any())
     {
-        
+        await db.Employees.AddAsync(new Employee
+        {
+            FirstName = "Max",
+            LastName = "Mustermann",
+            Email = "max@mail.muster",
+            
+        });
     }
-    
+
     if (!db.CompanyCars.Any())
     {
-        
     }
-    
+
     if (!db.Drives.Any())
     {
-        
     }
 
     await db.SaveChangesAsync();

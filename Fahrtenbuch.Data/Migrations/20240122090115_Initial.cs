@@ -41,17 +41,11 @@ namespace Fahrtenbuch.Data.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Passwort = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: true)
+                    Passwort = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employees", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Employees_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -100,11 +94,6 @@ namespace Fahrtenbuch.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Drives_EmployeeId",
                 table: "Drives",
-                column: "EmployeeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_EmployeeId",
-                table: "Employees",
                 column: "EmployeeId");
         }
 

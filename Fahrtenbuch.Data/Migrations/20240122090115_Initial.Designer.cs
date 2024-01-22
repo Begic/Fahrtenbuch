@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fahrtenbuch.Data.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20240122083356_Initial")]
+    [Migration("20240122090115_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -119,9 +119,6 @@ namespace Fahrtenbuch.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -137,8 +134,6 @@ namespace Fahrtenbuch.Data.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Employees");
                 });
@@ -159,7 +154,7 @@ namespace Fahrtenbuch.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Fahrtenbuch.Data.Entities.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Drives")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -169,13 +164,6 @@ namespace Fahrtenbuch.Data.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("Fahrtenbuch.Data.Entities.Employee", b =>
-                {
-                    b.HasOne("Fahrtenbuch.Data.Entities.Employee", null)
-                        .WithMany("Employees")
-                        .HasForeignKey("EmployeeId");
-                });
-
             modelBuilder.Entity("Fahrtenbuch.Data.Entities.CompanyCar", b =>
                 {
                     b.Navigation("CompanyCars");
@@ -183,7 +171,7 @@ namespace Fahrtenbuch.Data.Migrations
 
             modelBuilder.Entity("Fahrtenbuch.Data.Entities.Employee", b =>
                 {
-                    b.Navigation("Employees");
+                    b.Navigation("Drives");
                 });
 #pragma warning restore 612, 618
         }
