@@ -1,3 +1,5 @@
+using Fahrtenbuch.Data;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using MudBlazor.Services;
 
@@ -10,13 +12,24 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices(
     conf => conf.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight);
 
-
 //builder.Services.AddSingleton<WeatherForecastService>();
 
-
-
+builder.Services.AddDbContextFactory<DataBaseContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=LogbookDb; Integrated Security=True;")));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseContext>>().CreateDbContext())
+{
+    await db.Database.MigrateAsync();
+    if (!db.Employees.Any())
+    {
+    }
+
+    await db.SaveChangesAsync();
+}
+
 
 if (!app.Environment.IsDevelopment())
 {
