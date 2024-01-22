@@ -24,10 +24,10 @@
                         <MudDatePicker Label="Datum" @bind-Date="@editTripInfoModel.Date" For="@(() => editTripInfoModel.Date)"/>
                     </MudItem>
                     <MudItem md="4">
-                        <MudTimePicker Label="Start-Zeit" @bind-Time="@editTripInfoModel.StartTimeStamp" For="@(() => editTripInfoModel.StartTimeStamp)"/>
+                        <MudTimePicker Label="Start-Zeit" Editable="@true" @bind-Time="@editTripInfoModel.StartTimeStamp" For="@(() => editTripInfoModel.StartTimeStamp)"/>
                     </MudItem>
                     <MudItem md="4">
-                        <MudTimePicker Label="End-Zeit" @bind-Time="@editTripInfoModel.EndTimeStamp" For="@(() => editTripInfoModel.EndTimeStamp)"/>
+                        <MudTimePicker Label="End-Zeit" Editable="@true" @bind-Time="@editTripInfoModel.EndTimeStamp" For="@(() => editTripInfoModel.EndTimeStamp)"/>
                     </MudItem>
                     <MudItem md="12">
                         <MudTextField Lines="3" @bind-Value="@editTripInfoModel.TravelRoute" For="@(() => editTripInfoModel.TravelRoute)" Label="Routenbeschreibung" Variant="@Variant.Outlined"/>
@@ -35,13 +35,13 @@
                     <MudItem md="12">
                         <MudTextField Lines="3" @bind-Value="@editTripInfoModel.PurposeOfTrip" For="@(() => editTripInfoModel.PurposeOfTrip)" Label="Grund" Variant="@Variant.Outlined"/>
                     </MudItem>
-                    <MudItem md="4">
+                    <MudItem md="3">
                         <MudNumericField @bind-Value="@editTripInfoModel.DepartureMileage" For="@(() => editTripInfoModel.DepartureMileage)" Label="KM-Abfahrt" Variant="@Variant.Text" HideSpinButtons="@true"/>
                     </MudItem>
-                    <MudItem md="4">
+                    <MudItem md="3">
                         <MudNumericField @bind-Value="@editTripInfoModel.ArrivalMileage" For="@(() => editTripInfoModel.ArrivalMileage)" Label="KM-Ankunft" Variant="Variant.Text" HideSpinButtons="@true"/>
                     </MudItem>
-                    <MudItem md="4">
+                    <MudItem md="6">
                         <MudSelect @bind-Value="@editTripInfoModel.CompanyCarId" Label="Auto">
                             @foreach (var companyCar in allCompanyCarInfos)
                             {

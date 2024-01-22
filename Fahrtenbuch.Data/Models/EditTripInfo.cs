@@ -4,7 +4,7 @@ public class EditTripInfo
 {
     public int Id { get; set; }
     public DateTime? Date { get; set; }
-    public TimeSpan StartTimeStamp { get; set; }
+    public TimeSpan? StartTimeStamp { get; set; }
     public TimeSpan? EndTimeStamp { get; set; }
     public string TravelRoute { get; set; }
     public string PurposeOfTrip { get; set; }
