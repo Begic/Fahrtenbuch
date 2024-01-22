@@ -11,11 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dialogs\" />
-    <Folder Include="Components\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Fahrtenbuch.Data\Fahrtenbuch.Data.csproj" />
   </ItemGroup>
 

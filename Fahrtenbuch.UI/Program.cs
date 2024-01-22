@@ -20,11 +20,23 @@ builder.Services.AddDbContextFactory<DataBaseContext>(options =>
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
-using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseContext>>().CreateDbContext())
+using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseContext>>()?.CreateDbContext())
 {
     await db.Database.MigrateAsync();
+    
     if (!db.Employees.Any())
     {
+        
+    }
+    
+    if (!db.CompanyCars.Any())
+    {
+        
+    }
+    
+    if (!db.Drives.Any())
+    {
+        
     }
 
     await db.SaveChangesAsync();

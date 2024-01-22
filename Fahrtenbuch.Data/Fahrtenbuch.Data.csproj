@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Contracts\" />
-    <Folder Include="Providers\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
