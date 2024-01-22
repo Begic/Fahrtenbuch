@@ -5,10 +5,6 @@ namespace Fahrtenbuch.Data;
 
 public class DataBaseContext : DbContext
 {
-    public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
-    {
-    }
-
     public DbSet<Employee> Employees { get; set; }
     public DbSet<CompanyCar> CompanyCars { get; set; }
     public DbSet<Drive> Drives { get; set; }

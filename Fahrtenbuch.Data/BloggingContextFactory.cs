@@ -10,6 +10,6 @@ public class BloggingContextFactory
         optionsBuilder.UseSqlServer(
             "Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=LogbookDb; Integrated Security=True;");
 
-        return new DataBaseContext(optionsBuilder.Options);
+        return new DataBaseContext();
     }
 }
