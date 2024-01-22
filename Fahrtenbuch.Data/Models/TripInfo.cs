@@ -1,5 +1,6 @@
 ﻿namespace Fahrtenbuch.Data.Models;
 
-internal class EmployeeInfo
+public class TripInfo
 {
+    
 }

@@ -1,12 +1,10 @@
-﻿@page "/"
+﻿@page "/cars"
 
-@inject ITripsProviders TripsProvider
-@inject UserService UserService
+@inject ICompanyCarsProvider CompanyCarProvider
 
+<PageTitle>Autos</PageTitle>
 
-<PageTitle>Fahrten</PageTitle>
-
-<LoadingPage IsLoading="@(!allTripsInfos.Any())">
+<LoadingPage IsLoading="@(!allCompanyCarInfos.Any())">
     <DefaultLayout Title="Autos">
         <Actions>
             <MudTooltip Text="Hinzufügen">
@@ -14,15 +12,15 @@
             </MudTooltip>
         </Actions>
         <Content>
-            <MudDataGrid Items="@allTripsInfos"
+            <MudDataGrid Items="@allCompanyCarInfos"
                          Dense="@true"
                          Striped="@true"
                          Hover="@true"
                          Virtualize="@true">
                 <Columns>
-                    @* <PropertyColumn Title="Marke" Property="@(x => x.Brand)"/> *@
-                    @* <PropertyColumn Title="Modell" Property="@(x => x.Type)"/> *@
-                    @* <PropertyColumn Title="Kennzeichen" Property="@(x => x.LicensePlate)"/> *@
+                    <PropertyColumn Title="Marke" Property="@(x => x.Brand)"/>
+                    <PropertyColumn Title="Modell" Property="@(x => x.Type)"/>
+                    <PropertyColumn Title="Kennzeichen" Property="@(x => x.LicensePlate)"/>
                     <TemplateColumn>
                         <CellTemplate>
                             <MudStack Row>
@@ -43,11 +41,11 @@
 
 @code
 {
-    private List<TripInfo> allTripsInfos;
-    
-    protected async override Task OnInitializedAsync()
+    private List<CompanyCarInfo> allCompanyCarInfos;
+
+    protected override async Task OnInitializedAsync()
     {
-        allTripsInfos = await TripsProvider.GetAllTripsInfos();
+        allCompanyCarInfos = await CompanyCarProvider.GetAllCompanyCars();
     }
 
     private async Task OnClickAdd()
@@ -55,11 +53,13 @@
         
     }
 
-    private async Task OnClickEdit(TripInfo? info)
+    private async Task OnClickEdit(CompanyCarInfo? info)
     {
+        
     }
 
-    private async Task OnDelete(TripInfo? info)
+    private async Task OnDelete(CompanyCarInfo? info)
     {
+        
     }
 }

@@ -14,7 +14,7 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Übersicht
             </NavLink>
             <NavLink class="nav-link" href="/cars" Match="NavLinkMatch.All">
-                <span class="oi oi-move" aria-hidden="true"></span> Autos
+                <span class="oi oi-terminal" aria-hidden="true"></span> Autos
             </NavLink>
         </div>
     </nav>
@@ -22,7 +22,6 @@
 
 @code {
     private bool collapseNavMenu = true;
-
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
