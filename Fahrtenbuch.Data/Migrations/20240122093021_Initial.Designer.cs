@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fahrtenbuch.Data.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20240122090623_Initial")]
+    [Migration("20240122093021_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,6 +24,21 @@ namespace Fahrtenbuch.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CompanyCarEmployee", b =>
+                {
+                    b.Property<int>("CompanyCarsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CompanyCarsId", "EmployeesId");
+
+                    b.HasIndex("EmployeesId");
+
+                    b.ToTable("CompanyCarEmployee");
+                });
 
             modelBuilder.Entity("Fahrtenbuch.Data.Entities.CompanyCar", b =>
                 {
@@ -38,7 +53,7 @@ namespace Fahrtenbuch.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Registration")
+                    b.Property<string>("LicensePlate")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -53,7 +68,39 @@ namespace Fahrtenbuch.Data.Migrations
                     b.ToTable("CompanyCars");
                 });
 
-            modelBuilder.Entity("Fahrtenbuch.Data.Entities.Drive", b =>
+            modelBuilder.Entity("Fahrtenbuch.Data.Entities.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<byte[]>("Passwort")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("Fahrtenbuch.Data.Entities.Trip", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -98,51 +145,34 @@ namespace Fahrtenbuch.Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Drives");
+                    b.ToTable("Trips");
                 });
 
-            modelBuilder.Entity("Fahrtenbuch.Data.Entities.Employee", b =>
+            modelBuilder.Entity("CompanyCarEmployee", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("Fahrtenbuch.Data.Entities.CompanyCar", null)
+                        .WithMany()
+                        .HasForeignKey("CompanyCarsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<byte[]>("Passwort")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employees");
+                    b.HasOne("Fahrtenbuch.Data.Entities.Employee", null)
+                        .WithMany()
+                        .HasForeignKey("EmployeesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("Fahrtenbuch.Data.Entities.Drive", b =>
+            modelBuilder.Entity("Fahrtenbuch.Data.Entities.Trip", b =>
                 {
                     b.HasOne("Fahrtenbuch.Data.Entities.CompanyCar", "CompanyCar")
-                        .WithMany("Drives")
+                        .WithMany("Trips")
                         .HasForeignKey("CompanyCarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Fahrtenbuch.Data.Entities.Employee", "Employee")
-                        .WithMany("Drives")
+                        .WithMany("Trips")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -154,12 +184,12 @@ namespace Fahrtenbuch.Data.Migrations
 
             modelBuilder.Entity("Fahrtenbuch.Data.Entities.CompanyCar", b =>
                 {
-                    b.Navigation("Drives");
+                    b.Navigation("Trips");
                 });
 
             modelBuilder.Entity("Fahrtenbuch.Data.Entities.Employee", b =>
                 {
-                    b.Navigation("Drives");
+                    b.Navigation("Trips");
                 });
 #pragma warning restore 612, 618
         }

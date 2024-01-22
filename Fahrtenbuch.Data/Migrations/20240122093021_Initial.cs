@@ -19,7 +19,7 @@ namespace Fahrtenbuch.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Brand = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Type = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Registration = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                    LicensePlate = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,7 +43,31 @@ namespace Fahrtenbuch.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Drives",
+                name: "CompanyCarEmployee",
+                columns: table => new
+                {
+                    CompanyCarsId = table.Column<int>(type: "int", nullable: false),
+                    EmployeesId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyCarEmployee", x => new { x.CompanyCarsId, x.EmployeesId });
+                    table.ForeignKey(
+                        name: "FK_CompanyCarEmployee_CompanyCars_CompanyCarsId",
+                        column: x => x.CompanyCarsId,
+                        principalTable: "CompanyCars",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CompanyCarEmployee_Employees_EmployeesId",
+                        column: x => x.EmployeesId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Trips",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -60,15 +84,15 @@ namespace Fahrtenbuch.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Drives", x => x.Id);
+                    table.PrimaryKey("PK_Trips", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Drives_CompanyCars_CompanyCarId",
+                        name: "FK_Trips_CompanyCars_CompanyCarId",
                         column: x => x.CompanyCarId,
                         principalTable: "CompanyCars",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Drives_Employees_EmployeeId",
+                        name: "FK_Trips_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "Id",
@@ -76,13 +100,18 @@ namespace Fahrtenbuch.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Drives_CompanyCarId",
-                table: "Drives",
+                name: "IX_CompanyCarEmployee_EmployeesId",
+                table: "CompanyCarEmployee",
+                column: "EmployeesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_CompanyCarId",
+                table: "Trips",
                 column: "CompanyCarId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Drives_EmployeeId",
-                table: "Drives",
+                name: "IX_Trips_EmployeeId",
+                table: "Trips",
                 column: "EmployeeId");
         }
 
@@ -90,7 +119,10 @@ namespace Fahrtenbuch.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Drives");
+                name: "CompanyCarEmployee");
+
+            migrationBuilder.DropTable(
+                name: "Trips");
 
             migrationBuilder.DropTable(
                 name: "CompanyCars");

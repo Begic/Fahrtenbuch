@@ -2,7 +2,7 @@
 
 namespace Fahrtenbuch.Data.Entities;
 
-public class Drive
+public class Trip
 {
     [Key] public int Id { get; set; }
 

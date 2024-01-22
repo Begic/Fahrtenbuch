@@ -2,6 +2,7 @@ using Fahrtenbuch.Data;
 using Fahrtenbuch.Data.Contracts;
 using Fahrtenbuch.Data.Entities;
 using Fahrtenbuch.Data.Providers;
+using Fahrtenbuch.Data.Services;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using MudBlazor.Services;
@@ -34,7 +35,7 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
             FirstName = "Max",
             LastName = "Mustermann",
             Email = "max@mail.muster",
-            Passwort = new byte[0]
+            Passwort = HashPassword.Hash("passwort")
         });
     }
 
@@ -44,7 +45,7 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
         {
             Brand = "Bmw",
             Type = "M5 CS",
-            Registration = "KU 777 YB"
+            LicensePlate = "KU 777 YB"
         });
     }
 

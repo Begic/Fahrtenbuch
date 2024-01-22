@@ -11,5 +11,6 @@ public class Employee
     [MaxLength(200)] public string Email { get; set; }
     public byte[] Passwort { get; set; }
 
-    public List<Drive> Drives { get; set; } = new();
+    public List<Trip> Trips { get; set; } = new();
+    public List<CompanyCar> CompanyCars { get; set; } = new();
 }
