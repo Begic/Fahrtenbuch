@@ -15,6 +15,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices(
     conf => conf.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight);
 
+builder.Services.AddScoped<UserService>();
 builder.Services.AddTransient<IDrivesProviders, DrivesProviders>();
 builder.Services.AddTransient<ILoginProvider, LoginProvider>();
 builder.Services.AddTransient<IRegisterProvider, RegisterProvider>();
@@ -36,7 +37,7 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
             FirstName = "Max",
             LastName = "Mustermann",
             Email = "max@mail.muster",
-            Passwort = HashPassword.Hash("passwort")
+            Password = HashPassword.Hash("passwort")
         });
 
     if (!db.CompanyCars.Any())

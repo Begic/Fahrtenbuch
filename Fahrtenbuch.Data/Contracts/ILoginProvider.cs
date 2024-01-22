@@ -4,5 +4,5 @@ namespace Fahrtenbuch.Data.Contracts;
 
 public interface ILoginProvider
 {
-    Task<LoginInfo> CheckUserForLogin(LoginInfo loginModel);
+    Task<LoginInfo?> CheckUserForLogin(LoginInfo loginModel);
 }

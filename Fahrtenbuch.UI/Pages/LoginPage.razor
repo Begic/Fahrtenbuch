@@ -1,9 +1,9 @@
 ﻿@page "/Login"
 
 @inject ILoginProvider LoginProvider
-@inject UserService UserService
 @inject ISnackbar Toaster
 @inject IDialogService DialogService
+@inject UserService UserService
 @inject NavigationManager NavigationManager
 
 <PageTitle>Login</PageTitle>
@@ -85,7 +85,7 @@
 
     private void OnClickShowPassword()
     {
-        @if (isShow)
+        if (isShow)
         {
             isShow = false;
             PasswordInputIcon = Icons.Material.Filled.VisibilityOff;

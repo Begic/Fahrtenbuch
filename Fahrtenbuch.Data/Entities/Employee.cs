@@ -9,7 +9,7 @@ public class Employee
     [MaxLength(200)] public string FirstName { get; set; }
     [MaxLength(200)] public string LastName { get; set; }
     [MaxLength(200)] public string Email { get; set; }
-    public byte[] Passwort { get; set; }
+    public byte[] Password { get; set; }
 
     public List<Trip> Trips { get; set; } = new();
     public List<CompanyCar> CompanyCars { get; set; } = new();
