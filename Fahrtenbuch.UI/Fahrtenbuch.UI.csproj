@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Fahrtenbuch.Data\Fahrtenbuch.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Validation\" />
-  </ItemGroup>
-
 </Project>
