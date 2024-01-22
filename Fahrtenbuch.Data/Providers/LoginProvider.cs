@@ -18,11 +18,8 @@ public class LoginProvider : ILoginProvider
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
         foreach (var user in await db.Employees.ToListAsync())
         {
-            var loginModelPassword = HashPassword.Hash(loginModel.Password);
-            var ka = user.Password;
-            
             if (user.Email == loginModel.Email && 
-                user.Password == loginModelPassword)
+                Enumerable.SequenceEqual(user.Password, HashPassword.Hash(loginModel.Password)))
             {
                 return new LoginInfo
                 {
