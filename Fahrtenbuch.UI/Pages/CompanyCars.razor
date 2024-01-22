@@ -1,10 +1,12 @@
 ﻿@page "/cars"
 
-@inject ICompanyCarsProvider CompanyCarProvider
+@inject ICompanyCarProvider CompanyCarProvider
+@inject IDialogService DialogService
+@inject ISnackbar Toaster
 
 <PageTitle>Autos</PageTitle>
 
-<LoadingPage IsLoading="@(!allCompanyCarInfos.Any())">
+<LoadingPage IsLoading="@(allCompanyCarInfos == null)">
     <DefaultLayout Title="Autos">
         <Actions>
             <MudTooltip Text="Hinzufügen">
@@ -19,7 +21,7 @@
                          Virtualize="@true">
                 <Columns>
                     <PropertyColumn Title="Marke" Property="@(x => x.Brand)"/>
-                    <PropertyColumn Title="Modell" Property="@(x => x.Type)"/>
+                    <PropertyColumn Title="Model" Property="@(x => x.Type)"/>
                     <PropertyColumn Title="Kennzeichen" Property="@(x => x.LicensePlate)"/>
                     <TemplateColumn>
                         <CellTemplate>
@@ -45,21 +47,54 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
         allCompanyCarInfos = await CompanyCarProvider.GetAllCompanyCars();
     }
 
     private async Task OnClickAdd()
     {
-        
+        var result = await DialogService.ShowAsync<DialogEditCompanyCar>(string.Empty, new DialogParameters(), new DialogOptions
+        {
+            CloseOnEscapeKey = false,
+            DisableBackdropClick = true
+        });
+
+        var toReload = await result.Result;
+        await Refresh();
     }
 
     private async Task OnClickEdit(CompanyCarInfo? info)
     {
-        
+        var result = await DialogService.ShowAsync<DialogEditCompanyCar>(string.Empty, new DialogParameters()
+        {
+            {nameof(DialogEditCompanyCar.CompanyCar), info},
+        }, new DialogOptions
+        {
+            CloseOnEscapeKey = false,
+            DisableBackdropClick = true
+        });
+
+        var toReload = await result.Result;
+        await Refresh();
     }
 
     private async Task OnDelete(CompanyCarInfo? info)
     {
+        var result = await DialogService.ShowAsync<DialogDelete>("Achtung !", new DialogParameters(), new DialogOptions
+        {
+            CloseOnEscapeKey = false,
+            DisableBackdropClick = true
+        });
         
+        if ((bool)(await result.Result).Data)
+        {
+            await CompanyCarProvider.DeleteCompanyCar(info.Id);
+            Toaster.Add("Erfolgreich gelöscht", Severity.Success);
+            await Refresh();
+        }
     }
 }

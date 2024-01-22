@@ -6,8 +6,8 @@
 {
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
-            <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
         <NotFound>
             <PageTitle>Not found</PageTitle>
@@ -19,7 +19,7 @@
 }
 else
 {
-    <LoginPage @bind-CanLogin="@canLogin"/>
+    <LoginPage @bind-CanLogin="canLogin"/>
 }
 
 @code

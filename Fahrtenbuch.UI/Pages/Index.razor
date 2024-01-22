@@ -1,12 +1,14 @@
 ﻿@page "/"
 
-@inject ITripsProviders TripsProvider
 @inject UserService UserService
 
+@inject ITripProviders TripProvider
+@inject IDialogService DialogService
+@inject ISnackbar Toaster
 
 <PageTitle>Fahrten</PageTitle>
 
-<LoadingPage IsLoading="@(!allTripsInfos.Any())">
+<LoadingPage IsLoading="@(allTripsInfos == null)">
     <DefaultLayout Title="Autos">
         <Actions>
             <MudTooltip Text="Hinzufügen">
@@ -20,9 +22,7 @@
                          Hover="@true"
                          Virtualize="@true">
                 <Columns>
-                    @* <PropertyColumn Title="Marke" Property="@(x => x.Brand)"/> *@
-                    @* <PropertyColumn Title="Modell" Property="@(x => x.Type)"/> *@
-                    @* <PropertyColumn Title="Kennzeichen" Property="@(x => x.LicensePlate)"/> *@
+                    <PropertyColumn Title="Marke" Property="@(x => x.Date)" Format="d"/>
                     <TemplateColumn>
                         <CellTemplate>
                             <MudStack Row>
@@ -45,21 +45,56 @@
 {
     private List<TripInfo> allTripsInfos;
     
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        allTripsInfos = await TripsProvider.GetAllTripsInfos();
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        allTripsInfos = await TripProvider.GetAllTripsInfos(UserService.CurrentUser);
     }
 
     private async Task OnClickAdd()
     {
-        
+        var result = await DialogService.ShowAsync<DialogEditTrip>(string.Empty, new DialogParameters(), new DialogOptions
+        {
+            CloseOnEscapeKey = false,
+            DisableBackdropClick = true
+        });
+
+        var toReload = await result.Result;
+        await Refresh();
     }
 
     private async Task OnClickEdit(TripInfo? info)
     {
+        var result = await DialogService.ShowAsync<DialogEditTrip>(string.Empty, new DialogParameters()
+        {
+            {nameof(DialogEditTrip.Trip), info},
+        }, new DialogOptions
+        {
+            CloseOnEscapeKey = false,
+            DisableBackdropClick = true
+        });
+
+        var toReload = await result.Result;
+        await Refresh();
     }
 
     private async Task OnDelete(TripInfo? info)
     {
+        var result = await DialogService.ShowAsync<DialogDelete>("Achtung !", new DialogParameters(), new DialogOptions
+        {
+            CloseOnEscapeKey = false,
+            DisableBackdropClick = true
+        });
+        
+        if ((bool)(await result.Result).Data)
+        {
+            await TripProvider.DeleteTrip(info.Id);
+            Toaster.Add("Erfolgreich gelöscht", Severity.Success);
+            await Refresh();
+        }
     }
 }

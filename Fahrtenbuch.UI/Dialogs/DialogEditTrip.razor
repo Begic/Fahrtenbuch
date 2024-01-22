@@ -1,0 +1,111 @@
+﻿@inject UserService UserService
+
+@inject ITripProviders TripProvider
+@inject ICompanyCarProvider CompanyCarProvider
+@inject ISnackbar Toaster
+
+<LoadingPage IsLoading="@(allCompanyCarInfos == null)">
+    <EditForm Model="@editTripInfoModel" OnValidSubmit="@OnClickSave">
+        <FluentValidationValidator/>
+        <MudDialog>
+            <TitleContent>
+                @if (Trip == null)
+                {
+                    <MudText Typo="Typo.h6">Hinzufügen</MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6">Bearbeiten</MudText>
+                }
+            </TitleContent>
+            <DialogContent>
+                <MudGrid>
+                    <MudItem md="4">
+                        <MudDatePicker Label="Datum" @bind-Date="@editTripInfoModel.Date" For="@(() => editTripInfoModel.Date)"/>
+                    </MudItem>
+                    <MudItem md="4">
+                        <MudTimePicker Label="Start-Zeit" @bind-Time="@editTripInfoModel.StartTimeStamp" For="@(() => editTripInfoModel.StartTimeStamp)"/>
+                    </MudItem>
+                    <MudItem md="4">
+                        <MudTimePicker Label="End-Zeit" @bind-Time="@editTripInfoModel.EndTimeStamp" For="@(() => editTripInfoModel.EndTimeStamp)"/>
+                    </MudItem>
+                    <MudItem md="12">
+                        <MudTextField Lines="3" @bind-Value="@editTripInfoModel.TravelRoute" For="@(() => editTripInfoModel.TravelRoute)" Label="Routenbeschreibung" Variant="@Variant.Outlined"/>
+                    </MudItem>
+                    <MudItem md="12">
+                        <MudTextField Lines="3" @bind-Value="@editTripInfoModel.PurposeOfTrip" For="@(() => editTripInfoModel.PurposeOfTrip)" Label="Grund" Variant="@Variant.Outlined"/>
+                    </MudItem>
+                    <MudItem md="4">
+                        <MudNumericField @bind-Value="@editTripInfoModel.DepartureMileage" For="@(() => editTripInfoModel.DepartureMileage)" Label="KM-Abfahrt" Variant="@Variant.Text" HideSpinButtons="@true"/>
+                    </MudItem>
+                    <MudItem md="4">
+                        <MudNumericField @bind-Value="@editTripInfoModel.ArrivalMileage" For="@(() => editTripInfoModel.ArrivalMileage)" Label="KM-Ankunft" Variant="Variant.Text" HideSpinButtons="@true"/>
+                    </MudItem>
+                    <MudItem md="4">
+                        <MudSelect @bind-Value="@editTripInfoModel.CompanyCarId" Label="Auto">
+                            @foreach (var companyCar in allCompanyCarInfos)
+                            {
+                                <MudSelectItem Value="@companyCar.Id">@(companyCar.Brand + " | " + companyCar.Type + " | " + companyCar.LicensePlate)</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+            </DialogContent>
+            <DialogActions>
+                <MudTooltip Text="Abbrechen">
+                    <MudButton Color="@Color.Error" ButtonType="@ButtonType.Button" Variant="@Variant.Filled" EndIcon="@Icons.Material.Filled.Cancel" OnClick="@OnClickCancel">Abbrechen</MudButton>
+                </MudTooltip>
+                <MudTooltip Text="Speichern">
+                    <MudButton Color="@Color.Success" ButtonType="@ButtonType.Submit" Variant="@Variant.Filled" EndIcon="@Icons.Material.Filled.Save">Speichern</MudButton>
+                </MudTooltip>
+            </DialogActions>
+        </MudDialog>
+    </EditForm>
+</LoadingPage>
+
+@code
+{
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public TripInfo? Trip { get; set; }
+
+    private EditTripInfo editTripInfoModel;
+    private List<CompanyCarInfo> allCompanyCarInfos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        allCompanyCarInfos = await CompanyCarProvider.GetAllCompanyCars();
+
+        if (Trip != null)
+        {
+            editTripInfoModel = new EditTripInfo()
+            {
+                Id = Trip.Id,
+                Date = Trip.Date,
+                StartTimeStamp = Trip.StartTimeStamp.TimeOfDay,
+                EndTimeStamp = Trip.EndTimeStamp.Value.TimeOfDay,
+                TravelRoute = Trip.TravelRoute,
+                PurposeOfTrip = Trip.PurposeOfTrip,
+                DepartureMileage = Trip.DepartureMileage,
+                ArrivalMileage = Trip.ArrivalMileage,
+                CompanyCarId = Trip.CompanyCarId,
+            };
+        }
+        else
+        {
+            editTripInfoModel = new();
+        }
+    }
+
+    private async Task OnClickSave()
+    {
+        await TripProvider.EditTrip(UserService.CurrentUser, editTripInfoModel);
+        Toaster.Add("Erfolgreich gespeichert", Severity.Success);
+        MudDialog.Cancel();
+    }
+
+    private async Task OnClickCancel()
+    {
+        Toaster.Add("Abgebrochen", Severity.Error);
+        MudDialog.Cancel();
+    }
+}

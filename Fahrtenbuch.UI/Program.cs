@@ -16,10 +16,10 @@ builder.Services.AddMudServices(
     conf => conf.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight);
 
 builder.Services.AddScoped<UserService>();
-builder.Services.AddTransient<ITripsProviders, TripsProviders>();
+builder.Services.AddTransient<ITripProviders, TripProviders>();
 builder.Services.AddTransient<ILoginProvider, LoginProvider>();
 builder.Services.AddTransient<IRegisterProvider, RegisterProvider>();
-builder.Services.AddTransient<ICompanyCarsProvider, CompanyCarsProvider>();
+builder.Services.AddTransient<ICompanyCarProvider, CompanyCarProvider>();
 
 builder.Services.AddDbContextFactory<DataBaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString(

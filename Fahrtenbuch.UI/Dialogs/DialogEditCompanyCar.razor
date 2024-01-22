@@ -1,0 +1,78 @@
+﻿@inject ICompanyCarProvider CompanyCarProvider
+@inject ISnackbar Toaster
+
+<EditForm Model="@editCompanyCarInfoModel" OnValidSubmit="@OnClickSave">
+    <FluentValidationValidator />
+    <MudDialog>
+        <TitleContent>
+            @if (CompanyCar == null)
+            {
+                <MudText Typo="Typo.h6">Hinzufügen</MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.h6">Bearbeiten</MudText>
+            }
+        </TitleContent>
+        <DialogContent>
+            <MudGrid>
+                <MudItem md="12">
+                    <MudTextField @bind-Value="@editCompanyCarInfoModel.Brand" For="@(() => editCompanyCarInfoModel.Brand)" Label="Marke" Variant="@Variant.Outlined"/>
+                </MudItem>
+                <MudItem md="12">
+                    <MudTextField @bind-Value="@editCompanyCarInfoModel.Type" For="@(() => editCompanyCarInfoModel.Type)" Label="Model" Variant="@Variant.Outlined"/>
+                </MudItem>
+                <MudItem md="12">
+                    <MudTextField @bind-Value="@editCompanyCarInfoModel.LicensePlate" For="@(() => editCompanyCarInfoModel.LicensePlate)" Label="Kennzeichen" Variant="@Variant.Outlined"/>
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudTooltip Text="Abbrechen">
+                <MudButton Color="@Color.Error" ButtonType="@ButtonType.Button" Variant="@Variant.Filled" EndIcon="@Icons.Material.Filled.Cancel" OnClick="@OnClickCancel">Abbrechen</MudButton>
+            </MudTooltip>
+            <MudTooltip Text="Speichern">
+                <MudButton Color="@Color.Success" ButtonType="@ButtonType.Submit" Variant="@Variant.Filled" EndIcon="@Icons.Material.Filled.Save">Speichern</MudButton>
+            </MudTooltip>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+
+@code
+{
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public CompanyCarInfo? CompanyCar { get; set; }
+
+    private EditCompanyCarInfo editCompanyCarInfoModel;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (CompanyCar != null)
+        {
+            editCompanyCarInfoModel = new EditCompanyCarInfo
+            {
+                Id = CompanyCar.Id,
+                Brand = CompanyCar.Brand,
+                Type = CompanyCar.Type,
+                LicensePlate = CompanyCar.LicensePlate
+            };
+        }
+        else
+        {
+            editCompanyCarInfoModel = new();
+        }
+    }
+
+    private async Task OnClickSave()
+    {
+        await CompanyCarProvider.EditCompanyCar(editCompanyCarInfoModel);
+        Toaster.Add("Erfolgreich gespeichert", Severity.Success);
+        MudDialog.Cancel();
+    }
+
+    private async Task OnClickCancel()
+    {
+        Toaster.Add("Abgebrochen", Severity.Error);
+        MudDialog.Cancel();
+    }
+}

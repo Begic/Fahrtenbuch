@@ -1,7 +1,9 @@
 ﻿<div>
     @if (IsLoading)
     {
-        <MudProgressCircular Color="@Color.Warning" Size="@Size.Large" Indeterminate="@true"/>
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <MudProgressCircular Color="@Color.Default" Size="@Size.Large" Indeterminate="@true"/>
+        </div>
     }
     else
     {
