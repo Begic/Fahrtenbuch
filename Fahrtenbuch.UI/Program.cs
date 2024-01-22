@@ -16,6 +16,8 @@ builder.Services.AddMudServices(
     conf => conf.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight);
 
 builder.Services.AddTransient<IDrivesProviders, DrivesProviders>();
+builder.Services.AddTransient<ILoginProvider, LoginProvider>();
+builder.Services.AddTransient<IRegisterProvider, RegisterProvider>();
 
 builder.Services.AddDbContextFactory<DataBaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString(
@@ -29,7 +31,6 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
     await db.Database.MigrateAsync();
 
     if (!db.Employees.Any())
-    {
         await db.Employees.AddAsync(new Employee
         {
             FirstName = "Max",
@@ -37,17 +38,14 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
             Email = "max@mail.muster",
             Passwort = HashPassword.Hash("passwort")
         });
-    }
 
     if (!db.CompanyCars.Any())
-    {
         await db.CompanyCars.AddAsync(new CompanyCar
         {
             Brand = "Bmw",
             Type = "M5 CS",
             LicensePlate = "KU 777 YB"
         });
-    }
 
     await db.SaveChangesAsync();
 }

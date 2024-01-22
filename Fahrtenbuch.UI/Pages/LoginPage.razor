@@ -1,0 +1,101 @@
+﻿@page "/Login"
+
+@inject ILoginProvider LoginProvider
+@inject UserService UserService
+@inject ISnackbar Toaster
+@inject IDialogService DialogService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Login</PageTitle>
+
+<EditForm Model="@loginModel" OnValidSubmit="@OnClickTryLogin">
+    <FluentValidationValidator />
+    <MudPaper Style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 650px">
+        <DefaultLayout>
+            <Content>
+                <MudGrid>
+                    <MudItem xs="3" />
+                    <MudItem xs="6">
+                        <MudTextField Immediate="@true" @bind-Value="@loginModel.Email" For="@(() => loginModel.Email)" Label="E-Mail" Variant="@Variant.Outlined" InputType="@InputType.Email" />
+                        <MudTextField Immediate="@true" @bind-Value="@loginModel.Password" For="@(() => loginModel.Password)" Label="Passwort" Variant="@Variant.Outlined" InputType="@PasswordInput" Adornment="@Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="@OnClickShowPassword" AdornmentAriaLabel="Zeige Passwort" />
+                        <Divider Margin="16px" />
+                        <MudButton Class="mb-2" FullWidth="@true" Variant="@Variant.Filled" Color="@Color.Success" ButtonType="@ButtonType.Submit" EndIcon="@Icons.Material.Filled.Login">Anmelden</MudButton>
+                        <MudButton FullWidth="@true" Variant="@Variant.Filled" Color="@Color.Primary" OnClick="@OnClickRegister" EndIcon="@Icons.Material.Filled.PersonAdd">Registrieren</MudButton>
+                    </MudItem>
+                    <MudItem xs="3" />
+                </MudGrid>
+            </Content>
+        </DefaultLayout>
+    </MudPaper>
+</EditForm>
+
+@code
+{
+    [Parameter] public bool CanLogin { get; set; }
+    [Parameter] public EventCallback<bool> CanLoginChanged { get; set; }
+
+    private LoginInfo loginModel = new();
+
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    private bool isShow;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        loginModel = new();
+    }
+
+    private async Task OnClickTryLogin()
+    {
+        var loginUser = await LoginProvider.CheckUserForLogin(loginModel);
+
+        if (loginUser != null)
+        {
+            CanLogin = true;
+            UserService.CurrentUser = loginUser;
+            Toaster.Add("Login erfolgreich", MudBlazor.Severity.Success);
+        }
+        else
+        {
+            CanLogin = false;
+            UserService.CurrentUser = null;
+            loginModel = new LoginInfo();
+            Toaster.Add("Login fehlerhaft", MudBlazor.Severity.Error);
+        }
+
+        await CanLoginChanged.InvokeAsync(CanLogin);
+    }
+
+    private async Task OnClickRegister()
+    {
+        await DialogService.ShowAsync<DialogRegister>("Registrieren Sie sich um fortzufahren", new DialogOptions
+            {
+                Position = DialogPosition.Center,
+                DisableBackdropClick = true,
+                MaxWidth = MaxWidth.Small,
+            });
+
+        await Refresh();
+    }
+
+    private void OnClickShowPassword()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+}
