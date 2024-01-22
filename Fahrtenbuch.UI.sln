@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fahrtenbuch.UI", "Fahrtenbuch.UI\Fahrtenbuch.UI.csproj", "{BDC6D1B0-AE94-485E-8946-6851F10DD158}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fahrtenbuch.Data", "Fahrtenbuch.Data\Fahrtenbuch.Data.csproj", "{792002D7-C991-484D-A02F-16A18DDA7A6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BDC6D1B0-AE94-485E-8946-6851F10DD158}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDC6D1B0-AE94-485E-8946-6851F10DD158}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDC6D1B0-AE94-485E-8946-6851F10DD158}.Release|Any CPU.Build.0 = Release|Any CPU
+		{792002D7-C991-484D-A02F-16A18DDA7A6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{792002D7-C991-484D-A02F-16A18DDA7A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{792002D7-C991-484D-A02F-16A18DDA7A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{792002D7-C991-484D-A02F-16A18DDA7A6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
