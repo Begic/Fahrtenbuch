@@ -1,4 +1,5 @@
 ﻿using Fahrtenbuch.Data.Contracts;
+using Fahrtenbuch.Data.Entities;
 using Fahrtenbuch.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -46,8 +47,26 @@ public class TripProviders : ITripProviders
         }
     }
 
-    public async Task EditTrip(LoginInfo? userServiceCurrentUser, EditTripInfo editTripInfoModel)
+    public async Task EditTrip(LoginInfo? currentUser, EditTripInfo editModel)
     {
-        
+        await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
+        var toAdd = await db.Trips.FirstOrDefaultAsync(x => x.Id == editModel.Id).ConfigureAwait(false);
+
+        if (toAdd == null)
+        {
+            await db.Trips.AddAsync(toAdd = new Trip());
+        }
+
+        toAdd.Date = editModel.Date.Value;
+        toAdd.StartTimeStamp = editModel.Date.Value + editModel.StartTimeStamp.Value;
+        toAdd.EndTimeStamp = editModel.Date.Value + editModel.EndTimeStamp;
+        toAdd.ArrivalMileage = editModel.ArrivalMileage;
+        toAdd.DepartureMileage = editModel.DepartureMileage;
+        toAdd.TravelRoute = editModel.TravelRoute;
+        toAdd.PurposeOfTrip = editModel.PurposeOfTrip;
+        toAdd.CompanyCarId = editModel.CompanyCarId;
+        toAdd.EmployeeId = currentUser.Id;
+
+        await db.SaveChangesAsync();
     }
 }

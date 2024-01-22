@@ -1,5 +1,4 @@
 ﻿@page "/"
-
 @inject UserService UserService
 
 @inject ITripProviders TripProvider
@@ -22,7 +21,14 @@
                          Hover="@true"
                          Virtualize="@true">
                 <Columns>
-                    <PropertyColumn Title="Marke" Property="@(x => x.Date)" Format="d"/>
+                    <PropertyColumn Title="Datum" Property="@(x => x.Date)" Format="d"/>
+                    <PropertyColumn Title="Start-Zeit" Property="@(x => x.StartTimeStamp)" Format="t"/>
+                    <PropertyColumn Title="End-Zeit" Property="@(x => x.EndTimeStamp)" Format="t"/>
+                    <PropertyColumn Title="KM-Abfahrt" Property="@(x => x.DepartureMileage)" />
+                    <PropertyColumn Title="KM-Ankunft" Property="@(x => x.ArrivalMileage)" />
+                    <PropertyColumn Title="Auto" Property="@(x => x.CompanyCar)" />
+                    <PropertyColumn Title="Route" Property="@(x => x.TravelRoute)" />
+                    <PropertyColumn Title="Grund" Property="@(x => x.PurposeOfTrip)"/>
                     <TemplateColumn>
                         <CellTemplate>
                             <MudStack Row>
